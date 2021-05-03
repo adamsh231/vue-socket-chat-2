@@ -17,12 +17,12 @@
 
       <ul class="list">
 
-        <li v-for="index in 20" class="clearfix">
+        <div v-for="index in 20" class="clearfix" style="margin-top: 10px">
           <img :src="'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0'+ (index % 10 == 0 ? 1 : index % 10) +'.jpg'" alt="avatar"/>
           <div class="about" style="margin-top: 15px">
             <div class="name" style="color: white">Vincent {{ index }}</div>
           </div>
-        </li>
+        </div>
 
       </ul>
 
@@ -87,4 +87,4 @@ export default {
 }
 </script>
 
-<!--<style src="../assets/css/chat.scss" lang="scss"></style>-->
+<style src="../assets/css/chat.scss" lang="scss"></style>
