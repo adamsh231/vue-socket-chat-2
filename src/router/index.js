@@ -1,18 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 import Profiles from '../views/Profiles.vue'
 import Chat from '../views/Chat.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: Profiles
   },
   {
-    path: '/chat',
+    path: '/chat/:id',
     name: 'Chat',
-    component: Chat
+    component: Chat,
+    props: true
   },
   {
     path: '/profiles',
