@@ -1,32 +1,5 @@
 <template>
   <div class="container clearfix">
-    <div class="people-list" id="people-list">
-
-      <div class="list" style="height: 90px; padding: 20px">
-
-        <li class="clearfix">
-          <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_10.jpg" alt="avatar"/>
-          <div class="about" style="margin-top: 15px">
-            <div class="name" style="color: white">Roudhlotul Jannah</div>
-          </div>
-        </li>
-
-      </div>
-
-      <hr>
-
-      <ul class="list">
-
-        <div v-for="(profile, index) in tempProfiles" class="clearfix" style="margin-top: 10px">
-          <img :src="'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0'+ (index % 10 == 0 ? 1 : index % 10) +'.jpg'" alt="avatar"/>
-          <div class="about" style="margin-top: 15px">
-            <div class="name" style="color: white">{{ profile.name }}</div>
-          </div>
-        </div>
-
-      </ul>
-
-    </div>
 
     <div class="chat">
 
@@ -86,6 +59,7 @@ import {mapState} from "vuex";
 
 export default {
   name: "Chat",
+  props: ['id'],
   computed: {
     ...mapState({
       tempProfiles: state => state.profiles
