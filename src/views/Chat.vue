@@ -8,7 +8,7 @@
 
         <div v-for="profile in profiles" class="chat-about">
           <div v-if="profile.id != id" class="chat-with">{{ profile.name }}</div>
-          <div v-if="profile.id != id" class="chat-num-messages">online</div>
+          <div v-if="profile.id != id" class="chat-num-messages">{{ status }}</div>
         </div>
 
 
@@ -39,12 +39,13 @@
       </div> <!-- end chat-history -->
 
       <div class="chat-message clearfix">
-        <textarea name="message-to-send" v-model="message" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
+        <textarea name="message-to-send" v-model="message" id="message-to-send" placeholder="Type your message"
+                  @input="changeStatus" rows="3"></textarea>
 
         <i class="fa fa-file-o"></i> &nbsp;&nbsp;&nbsp;
         <i class="fa fa-file-image-o"></i>
 
-        <button @click="sendMessage(id)" >Send</button>
+        <button @click="sendMessage(id)">Send</button>
 
       </div> <!-- end chat-message -->
 
@@ -55,7 +56,8 @@
 
 <script>
 import io from 'socket.io-client';
-const socket = io('192.168.0.6:3000', { transports: ["websocket"] })
+
+const socket = io('192.168.0.6:3000', {transports: ["websocket"]})
 
 export default {
   name: "Chat",
@@ -64,6 +66,8 @@ export default {
     let date = new Date()
     return {
       message: "",
+      status: "online",
+      statusChanged: false,
       profiles: [
         {id: 1, name: "Adam Syarif"},
         {id: 2, name: "Roudhlotul Jannah"}
@@ -77,31 +81,46 @@ export default {
     });
     socket.on("sendMessage", (response) => {
       this.messages.push(response)
-      var audio = new Audio(require("../assets/audio/wa.mp3"))
+      let audio = new Audio(require("../assets/audio/wa.mp3"))
       audio.play()
+    });
+    socket.on("status", (response) => {
+      this.status = response
     });
   },
   beforeUnmount() {
     socket.off()
   },
   methods: {
-    sendMessage(id){
+    sendMessage(id) {
       let date = new Date()
       let msg = ""
-      if(id == 1){
+      if (id == 1) {
         msg = {id: 1, from: "Adam", message: this.message, time: date.getHours() + ":" + date.getMinutes()}
         this.messages.push(msg)
-      }else{
+      } else {
         msg = {id: 2, from: "Nana", message: this.message, time: date.getHours() + ":" + date.getMinutes()}
         this.messages.push(msg)
       }
       socket.emit('sendMessage', msg)
       this.message = ""
+      this.changeStatus()
+    },
+    changeStatus(){
+      if(this.message != ""){
+        if(!this.statusChanged){
+          socket.emit("status", "mengetik...")
+          this.statusChanged = !this.statusChanged
+        }
+      }else{
+        this.statusChanged = !this.statusChanged
+        socket.emit("status", "online")
+      }
     }
   },
   updated() {
     this.$refs.send.scrollIntoView();
-  }
+  },
 }
 </script>
 
